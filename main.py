@@ -1,4 +1,5 @@
 from src import preprocessor, similarity, signature_extraction
+import sys, json
 
 
 # @description: group and cluster log statements of a given log file. Then, find the variable elements of the logs.
@@ -39,4 +40,16 @@ def cluster(log_filename, separator=' ', threshold_1=0.5, threshold_2=0.9):
 
 if __name__ == "__main__":
     # reserved for later
-    pass
+    if len(sys.argv) < 5:
+        print("Incorrect usage: main.py <input file> <output file> <t1> <t2> [<separator>=' '] ")
+        sys.exit(1)
+
+    sep = ' '
+
+    if len(sys.argv) == 6:
+        sep = sys.argv[5]
+
+    output = cluster(sys.argv[1], sep, float(sys.argv[3]), float(sys.argv[4]))
+
+    with open(sys.argv[2], "w") as output_file:
+        json.dump(output, output_file)
